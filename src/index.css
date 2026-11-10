@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* shadcn-style dark mode: driven by the `dark` class on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  /* Upscaled palette (the original charcoal / ivory / brass) */
+  --color-ink: #0e0e0c;
+  --color-card: #141412;
+  --color-card-2: #1a1a17;
+  --color-line: #262622;
+  --color-ivory: #f2eee6;
+  --color-muted: #a8a398;
+  --color-brass: #c9b48a;
+  --color-brass-light: #d8c6a0;
+
+  /* shadcn tokens used by components/ui */
+  --color-background: #0e0e0c;
+  --color-foreground: #f2eee6;
+  --color-primary: #f2eee6;
+  --color-primary-foreground: #0e0e0c;
+  --color-secondary: #1a1a17;
+  --color-secondary-foreground: #f2eee6;
+  --color-accent: #1a1a17;
+  --color-accent-foreground: #f2eee6;
+  --color-destructive: #b4453a;
+  --color-input: #2e2e29;
+  --color-ring: #c9b48a;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ink);
+  color: var(--color-ivory);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(201 180 138 / 0.3);
+  color: var(--color-ivory);
+}
+
+/* Gentle reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+:focus-visible {
+  outline: 1px solid var(--color-brass);
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-ink); }
+::-webkit-scrollbar-thumb { background: #2a2a26; border-radius: 3px; }
