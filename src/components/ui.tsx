@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import type { Project } from "../siteConfig";
 
 export const scrollToId = (id: string) =>
   document.getElementById(id.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
@@ -29,20 +28,137 @@ export function useReveal<T extends HTMLElement>() {
   return ref;
 }
 
-export function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  const ref = useReveal<HTMLDivElement>();
+export function Reveal({
+  children,
+  className = "",
+  delay = 0,
+  as = "div",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  /** Stagger delay in ms. */
+  delay?: number;
+  /** Element to render, e.g. "li" inside a list. */
+  as?: "div" | "li" | "section" | "article";
+}) {
+  const ref = useReveal<HTMLElement>();
+  return React.createElement(
+    as,
+    {
+      ref,
+      className: `reveal ${className}`,
+      style: delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined,
+    },
+    children
+  );
+}
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/**
+ * Counts a value like "53%", "0.05s" or "£1,200" up from zero when it scrolls
+ * into view. Non-numeric values are shown as-is.
+ */
+export function CountUp({ value, duration = 1600, className = "" }: { value: string; duration?: number; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const match = value.match(/^(\D*)([\d,]*\.?\d+)(.*)$/);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !match || prefersReducedMotion() || !("IntersectionObserver" in window)) return;
+    const [, prefix, raw, suffix] = match;
+    const target = parseFloat(raw.replace(/,/g, ""));
+    const decimals = raw.includes(".") ? raw.split(".")[1].length : 0;
+    const format = (n: number) =>
+      prefix + n.toLocaleString("en-GB", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + suffix;
+
+    el.textContent = format(0);
+    let frame = 0;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - t, 4);
+          el.textContent = t < 1 ? format(target * eased) : value;
+          if (t < 1) frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [value]);
+
   return (
-    <div ref={ref} className={`reveal ${className}`}>
-      {children}
+    <span ref={ref} className={className}>
+      {value}
+    </span>
+  );
+}
+
+/** Splits text into words that rise in one after another (hero headline). */
+export function RiseWords({ text, start = 0, step = 70 }: { text: string; start?: number; step?: number }) {
+  const words = text.split(" ").filter(Boolean);
+  return (
+    <>
+      {words.map((w, i) => (
+        <React.Fragment key={i}>
+          <span className="word-mask">
+            <span className="word" style={{ "--d": `${start + i * step}ms` } as React.CSSProperties}>
+              {w}
+            </span>
+          </span>{" "}
+        </React.Fragment>
+      ))}
+    </>
+  );
+}
+
+/** Seamless, slowly scrolling strip of items. Pauses on hover. */
+export function Marquee({ items, className = "" }: { items: string[]; className?: string }) {
+  const row = (hidden: boolean) => (
+    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {items.map((item) => (
+        <li key={item} className="flex items-center whitespace-nowrap">
+          <span className="px-8 text-2xl font-medium tracking-[-0.03em] sm:text-4xl">{item}</span>
+          <span className="text-brass" aria-hidden="true">✦</span>
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <div className={`marquee overflow-hidden ${className}`}>
+      <div className="marquee-track">
+        {row(false)}
+        {row(true)}
+      </div>
     </div>
   );
 }
 
-/** Small bracketed label, e.g. [ OUR PROCESS ] */
-export function Label({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+/** Small mono label, e.g. 01 — PROCESS */
+export function Label({
+  children,
+  className = "",
+  tone = "dark",
+  style,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  tone?: "dark" | "light";
+  style?: React.CSSProperties;
+}) {
   return (
-    <p className={`font-mono text-[11px] uppercase tracking-[0.22em] text-brass ${className}`}>
-      [ {children} ]
+    <p style={style} className={`font-mono text-[11px] uppercase tracking-[0.2em] ${tone === "dark" ? "text-brass" : "text-brass-deep"} ${className}`}>
+      {children}
     </p>
   );
 }
@@ -51,86 +167,132 @@ export function SectionHeading({
   label,
   title,
   intro,
+  tone = "dark",
 }: {
   label: string;
   title: React.ReactNode;
   intro?: string;
+  tone?: "dark" | "light";
 }) {
   return (
     <Reveal className="mb-14 grid gap-6 sm:mb-20 lg:grid-cols-12 lg:items-end">
       <div className="lg:col-span-7">
-        <Label>{label}</Label>
-        <h2 className="mt-5 font-serif text-4xl font-light leading-[1.05] tracking-tight text-ivory text-balance sm:text-6xl">
+        <Label tone={tone}>{label}</Label>
+        <h2
+          className={`mt-4 text-4xl font-medium leading-[1.02] tracking-[-0.03em] text-balance sm:text-6xl ${
+            tone === "dark" ? "text-ivory" : "text-ink"
+          }`}
+        >
           {title}
         </h2>
       </div>
       {intro && (
-        <p className="text-[15px] font-light leading-relaxed text-muted lg:col-span-4 lg:col-start-9">{intro}</p>
+        <p className={`text-[15px] leading-relaxed lg:col-span-4 lg:col-start-9 ${tone === "dark" ? "text-muted" : "text-stone"}`}>
+          {intro}
+        </p>
       )}
     </Reveal>
   );
 }
 
-/** A small browser-window frame. */
-export function BrowserFrame({ children, url, className = "" }: { children: React.ReactNode; url?: string; className?: string }) {
+/** Serif italic accent word. */
+export const Accent = ({ children }: { children: React.ReactNode }) => (
+  <em className="font-serif font-normal italic tracking-normal">{children}</em>
+);
+
+/** A phrase with a hand-drawn ellipse around it. */
+export function Circled({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`overflow-hidden rounded-xl border border-white/10 bg-card shadow-2xl shadow-black/50 ${className}`}>
-      <div className="flex items-center gap-1.5 border-b border-white/5 bg-card-2 px-3 py-2">
-        <span className="h-2 w-2 rounded-full bg-white/15" />
-        <span className="h-2 w-2 rounded-full bg-white/15" />
-        <span className="h-2 w-2 rounded-full bg-white/15" />
-        {url && <span className="ml-3 truncate font-mono text-[10px] text-muted/80">{url}</span>}
-      </div>
+    <span className={`relative inline-block ${className}`}>
       {children}
+      <svg
+        className="draw pointer-events-none absolute -inset-x-[12%] -inset-y-[30%] h-[160%] w-[124%] text-brass"
+        viewBox="0 0 200 60"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M28 8 C 70 0, 170 2, 192 22 C 206 40, 150 56, 92 56 C 38 56, 4 46, 8 28 C 11 16, 40 8, 120 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+    </span>
+  );
+}
+
+/** A phrase with a loose hand-drawn underline. */
+export function Underlined({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="relative inline-block">
+      {children}
+      <svg className="draw pointer-events-none absolute -bottom-2 left-0 h-3 w-full text-brass" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 8 C 50 2, 120 12, 198 4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+      </svg>
+    </span>
+  );
+}
+
+/** Small tilted sticker. */
+export function Sticker({ children, rotate = -6, className = "" }: { children: React.ReactNode; rotate?: number; className?: string }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-md bg-brass px-2.5 py-1 font-mono text-[11px] text-ink shadow-lg shadow-black/30 ${className}`}
+      style={{ transform: `rotate(${rotate}deg)` }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/** Deterministic pixel mosaic, used as an overlay on photos. */
+export function Mosaic({ cols = 12, rows = 8, density = 0.42, seed = 7, className = "" }: { cols?: number; rows?: number; density?: number; seed?: number; className?: string }) {
+  let s = seed;
+  const rand = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  const cells = Array.from({ length: cols * rows }, (_, i) => {
+    const x = i % cols;
+    // Cluster towards the right-hand side, like a pixel dissolve.
+    const bias = x / cols;
+    const r = rand();
+    return r < density * (0.35 + bias) ? (r < density * 0.25 ? 2 : 1) : 0;
+  });
+  return (
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none grid ${className}`}
+      style={{ gridTemplateColumns: `repeat(${cols}, 1fr)`, gridTemplateRows: `repeat(${rows}, 1fr)` }}
+    >
+      {cells.map((v, i) => (
+        <span key={i} className={v === 2 ? "bg-brass-light" : v === 1 ? "bg-brass" : ""} />
+      ))}
     </div>
   );
 }
 
+/** Photo with grayscale treatment and optional brass mosaic. */
 const FALLBACK_IMG = "/images/hero_london_property_1794274507487.jpg";
-
-/** A miniature website drawn from a project's palette. Purely decorative. */
-export function SiteMockup({ project, compact = false }: { project: Project; compact?: boolean }) {
-  const { bg, ink, accent } = project.palette;
+export function Photo({ src, alt = "", className = "", mosaic = true, seed = 7 }: { src: string; alt?: string; className?: string; mosaic?: boolean; seed?: number }) {
   return (
-    <div className="flex h-full w-full flex-col" style={{ background: bg, color: ink }} aria-hidden="true">
-      <div className={`flex items-center justify-between ${compact ? "px-3 py-2" : "px-6 py-4"}`}>
-        <span className={`font-serif ${compact ? "text-[10px]" : "text-sm"}`}>{project.title}</span>
-        <span className={`flex gap-3 ${compact ? "text-[7px]" : "text-[10px]"}`} style={{ opacity: 0.65 }}>
-          {project.nav.map((n) => (
-            <span key={n}>{n}</span>
-          ))}
-        </span>
-      </div>
-      <div className={`grid flex-1 grid-cols-5 gap-4 ${compact ? "px-3 pb-3" : "px-6 pb-6"}`}>
-        <div className="col-span-3 flex flex-col justify-center">
-          <span className={`font-serif font-light leading-[1.02] ${compact ? "text-base" : "text-3xl"}`}>{project.headline}</span>
-          {!compact && (
-            <span className="mt-3 space-y-1.5">
-              <span className="block h-1 w-11/12 rounded-full" style={{ background: ink, opacity: 0.15 }} />
-              <span className="block h-1 w-8/12 rounded-full" style={{ background: ink, opacity: 0.15 }} />
-            </span>
-          )}
-          <span
-            className={`mt-3 inline-block w-fit rounded-full ${compact ? "px-2 py-0.5 text-[7px]" : "px-3.5 py-1.5 text-[10px]"}`}
-            style={{ background: accent, color: bg }}
-          >
-            {project.nav[project.nav.length - 1]} →
-          </span>
-        </div>
-        <div className="col-span-2 overflow-hidden rounded-lg">
-          <img
-            src={project.image || FALLBACK_IMG}
-            alt=""
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            className="h-full w-full object-cover"
-            onError={(e) => {
-              const img = e.currentTarget;
-              if (!img.src.endsWith(FALLBACK_IMG)) img.src = FALLBACK_IMG;
-            }}
-          />
-        </div>
-      </div>
+    <div className={`relative overflow-hidden ${className}`}>
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        referrerPolicy="no-referrer"
+        className="h-full w-full object-cover grayscale contrast-[1.05]"
+        onError={(e) => {
+          const img = e.currentTarget;
+          if (!img.src.endsWith(FALLBACK_IMG)) img.src = FALLBACK_IMG;
+        }}
+      />
+      <div className="absolute inset-0 bg-ink/20" />
+      {mosaic && <Mosaic seed={seed} className="absolute inset-y-0 right-0 w-[70%] opacity-95" />}
     </div>
   );
 }

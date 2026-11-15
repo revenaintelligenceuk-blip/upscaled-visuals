@@ -3,6 +3,9 @@
  *
  * Every headline, price, FAQ answer and contact detail lives here.
  * Anything marked TODO is a placeholder to confirm before launch.
+ *
+ * Page order: Hero → Portfolio → The problem → Our approach → Process →
+ * Testimonials → FAQ → Final CTA (free consultation)
  */
 
 export const siteConfig = {
@@ -17,6 +20,36 @@ export const siteConfig = {
     // Optional: paste a Formspree / Basin / Getform endpoint here to receive form
     // submissions by email. Left empty, the form opens the visitor's email app instead.
     formEndpoint: "",
+    // Name of the form service above, shown in the privacy policy (e.g. "Formspree, Inc. (USA)").
+    formProvider: "",
+    // Optional: a Cal.com / Calendly link so people can book the call themselves.
+    bookingUrl: "",
+  },
+
+  /* LEGAL & BUSINESS DETAILS
+     Shown in the footer and on /privacy, /cookies and /terms.
+     UK law (E-Commerce Regulations 2002) requires your trading name, a
+     geographic address and an email on the site. A virtual office or
+     registered-office service address is fine if you don't want to show home. */
+  legal: {
+    // TODO: how are you trading? Pick one and fill in the matching fields.
+    //   "partnership"  – two people trading together, not incorporated
+    //   "sole-trader"  – one of you trading, the other helping
+    //   "ltd"          – a limited company registered at Companies House
+    structure: "partnership" as "partnership" | "sole-trader" | "ltd",
+    tradingName: "Upscaled",
+    ownerNames: "Raffaele [SURNAME] and Brilliana [SURNAME]", // TODO: full legal names (non-Ltd)
+    address: "[BUSINESS ADDRESS], London, [POSTCODE]", // TODO: geographic address (not a PO box)
+    companyName: "", // Ltd only, e.g. "Upscaled Studio Ltd"
+    companyNumber: "", // Ltd only
+    registeredOffice: "", // Ltd only
+    placeOfRegistration: "England and Wales", // Ltd only
+    vatNumber: "", // only if VAT-registered
+    icoRegistration: "", // TODO: your ICO data protection fee reference, e.g. "ZB123456"
+    // Services that handle visitor data. Keep this list true to what you actually use.
+    hostingProvider: "[HOSTING PROVIDER, e.g. Vercel Inc. or Netlify Inc.]", // TODO
+    emailProvider: "[EMAIL PROVIDER, e.g. Google Workspace or Microsoft 365]", // TODO
+    lastUpdated: "15 November 2026",
   },
 
   founders: [
@@ -25,206 +58,150 @@ export const siteConfig = {
     { name: "Brilliana", role: "Co-founder", initial: "B", photo: "" },
   ],
 
+  // Used by the footer. The top liquid navbar is configured in components/Navbar.tsx.
   navigation: [
     { label: "Work", href: "#work" },
-    { label: "Services", href: "#services" },
+    { label: "Approach", href: "#approach" },
     { label: "Process", href: "#process" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "FAQ", href: "#faq" },
+    { label: "Consultation", href: "#contact" },
   ],
 
+  /* 1. HERO: the result we deliver */
   hero: {
     eyebrow: "Web design & development studio",
-    headlineStart: "Websites that make your business look as",
-    headlineAccent: "good",
-    headlineEnd: "as it really is.",
+    headlineStart: "Websites that turn visitors into",
+    headlineAccent: "customers",
+    headlineEnd: ".",
     subheadline:
-      "We're Raffaele and Brilliana. We design, build and launch fast, modern websites for small businesses, at a fixed price, live in about two weeks.",
-    ctaPrimary: "Start a project",
+      "We're Raffaele and Brilliana. We design and build fast, modern websites for small businesses, so more people call, book and buy. Fixed price, live in about two weeks.",
+    ctaPrimary: "Get a free consultation",
     ctaSecondary: "See our work",
-    proof: [
-      { value: "~2 weeks", label: "From kickoff to launch" },
-      { value: "Fixed price", label: "Agreed up front, no surprises" },
-      { value: "100% yours", label: "You own the site and domain" },
-    ],
   },
 
-  statement: {
-    lead: "We believe a great small-business website isn't built through decoration,",
-    rest: "but through clarity: it says who you are, earns trust in seconds, and quietly turns visitors into customers.",
+  /* 2. PORTFOLIO teaser on the homepage (text only, no images).
+     The full examples go on their own page. Put its address in
+     portfolioPage.url once it exists; until then the button opens the
+     contact form with "Portfolio & walkthrough" selected. */
+  portfolioPage: {
+    url: "", // e.g. "/work"
+    cta: "Request the portfolio & a walkthrough",
+    note: "Want to see more? We'll send you the full portfolio and talk you through any of these sites on a short call.",
   },
 
-  industries: [
-    "Cafés & restaurants",
-    "Salons & barbers",
-    "Trades & contractors",
-    "Personal trainers",
-    "Estate & letting agents",
-    "Consultants",
-    "Creative studios",
-    "Local shops",
-    "Clinics & therapists",
-    "Start-ups",
-  ],
-
-  comparison: {
-    eyebrow: "The difference",
-    heading: "Same business. Different first impression.",
-    subheading:
-      "Most visitors decide in a few seconds whether to stay. Drag the slider to see what a redesign does for a typical small-business site.",
-    beforeLabel: "Before",
-    afterLabel: "After",
-    highlights: [
-      "Clear headline that says what you do and where",
-      "One obvious next step: call, book or enquire",
-      "Built mobile-first, since most visitors are on a phone",
-      "Fast loading and set up to be found on Google",
-    ],
-  },
-
-  services: [
-    {
-      id: "design",
-      number: "01",
-      title: "Website design & build",
-      description:
-        "A custom-designed website, built from scratch around your business. No cookie-cutter templates. Responsive, fast and easy to navigate.",
-      features: ["Custom design, not a template", "Mobile-first and fast", "Contact forms, maps & booking links"],
-    },
-    {
-      id: "redesign",
-      number: "02",
-      title: "Redesigns",
-      description:
-        "Already have a site that's dated, slow or hard to update? We rebuild it with a modern look and keep your domain and search rankings intact.",
-      features: ["Content moved over for you", "Old links redirected", "Clear before/after improvements"],
-    },
-    {
-      id: "care",
-      number: "03",
-      title: "Launch & ongoing care",
-      description:
-        "We handle the technical side: domain, hosting, SEO basics and Google Business setup. Optional monthly care keeps it updated and secure.",
-      features: ["Domain & hosting set up", "On-page SEO & analytics", "Monthly edits on the care plan"],
-    },
-  ],
-
-  // Rendered as: lead + struck-through word + highlighted phrase
-  principles: [
-    { lead: "Clarity over", strike: "decoration,", highlight: "every time.", body: "A visitor should know what you do and how to reach you within seconds." },
-    { lead: "Fewer", strike: "pages,", highlight: "better decisions.", body: "We cut what doesn't help a customer choose you, and make what's left beautiful." },
-    { lead: "Say it plainly, then", strike: "", highlight: "make it beautiful.", body: "No jargon, in our copy or in our conversations with you." },
-    { lead: "Design for the second look,", strike: "", highlight: "not just the first scroll.", body: "Details that keep holding up after the first impression." },
-    { lead: "Small team. Direct line.", strike: "", highlight: "No account managers.", body: "You talk to the two people actually designing and building your site." },
-  ],
-
-  process: [
-    { step: "01", title: "Discovery call", timing: "Day 1", description: "A free 20-minute call about your business, your customers and what the site needs to do." },
-    { step: "02", title: "Design", timing: "Week 1", description: "We design the homepage first, share it with you and refine it together until it feels right." },
-    { step: "03", title: "Build", timing: "Week 2", description: "We build the full site, add your content and test it on phones, tablets and desktops." },
-    { step: "04", title: "Launch", timing: "Go live", description: "We connect your domain, set up Google and analytics, and show you how to make simple edits." },
-  ],
-
-  // TODO: confirm pricing before launch
-  packages: [
-    {
-      name: "Starter",
-      subtitle: "One-page website",
-      price: "£495",
-      popular: false,
-      cta: "Choose Starter",
-      bullets: [
-        "Single scrolling page with up to 6 sections",
-        "Custom design in your brand colours",
-        "Mobile-first, fast-loading build",
-        "Contact form, map and social links",
-        "Live in about 1 week",
-      ],
-    },
-    {
-      name: "Business",
-      subtitle: "Multi-page website",
-      price: "£1,250",
-      popular: true,
-      badge: "Most popular",
-      cta: "Choose Business",
-      bullets: [
-        "Up to 6 pages (Home, About, Services, Contact…)",
-        "Custom design with 2 rounds of revisions",
-        "On-page SEO and Google Business setup",
-        "Booking, enquiry or quote forms",
-        "Live in about 2 weeks",
-      ],
-    },
-    {
-      name: "Custom",
-      subtitle: "Online shop, bookings or bigger builds",
-      price: "From £2,500",
-      popular: false,
-      cta: "Get a quote",
-      bullets: [
-        "Online shop or booking system",
-        "Unlimited pages and custom features",
-        "Copywriting help for every page",
-        "Integrations (payments, calendars, CRM)",
-        "Timeline agreed on the discovery call",
-      ],
-    },
-  ],
-
-  carePlan: {
-    title: "Care plan · £49/month",
-    body: "Hosting, security updates, backups and up to 1 hour of edits each month. Optional, and you can cancel anytime.",
-  },
-
-  // Concept projects. Replace with real client work as it comes in.
-  // `palette` drives the mini website mockup drawn on each card.
   portfolio: [
     {
       id: "ember",
       title: "Ember & Oak",
       industry: "Café & bakery",
       tag: "Concept",
-      description: "Warm one-page site with menu, opening hours and a click-to-call button for orders.",
-      palette: { bg: "#F3E9DC", ink: "#3B2A1E", accent: "#C8553D" },
-      image: "/images/enhanced_after_room_1794274507997.jpg",
-      nav: ["Menu", "Visit", "Order"],
-      headline: "Fresh bread, slow coffee.",
+      summary: "A warm, appetising one-pager that gets people through the door.",
+      built: ["Menu & opening hours", "Click-to-call ordering", "Google Maps & reviews"],
+      goal: "More walk-ins and phone orders",
+      url: "", // add the live demo link once built, e.g. "https://ember.upscaledvisuals.co.uk"
     },
     {
-      id: "keystone",
-      title: "Keystone Lettings",
-      industry: "Letting agent",
+      id: "maison",
+      title: "Maison Hair Studio",
+      industry: "Salon",
       tag: "Concept",
-      description: "Property-led site with listings, valuation form and landlord resources.",
-      palette: { bg: "#0F1A17", ink: "#EDEDE6", accent: "#C9B48A" },
-      image: "/images/hero_london_property_1794274507487.jpg",
-      nav: ["To let", "Landlords", "Valuation"],
-      headline: "Homes worth moving for.",
+      summary: "An elegant site that turns Instagram followers into booked appointments.",
+      built: ["Online booking", "Price list & stylist profiles", "Instagram gallery"],
+      goal: "Fewer DMs, more bookings",
+      url: "",
     },
     {
-      id: "form",
-      title: "Form Studio",
-      industry: "Personal trainer",
+      id: "northline",
+      title: "Northline Architects",
+      industry: "Architecture practice",
       tag: "Concept",
-      description: "Bold, high-energy site with class timetable and online booking.",
-      palette: { bg: "#141414", ink: "#F5F2EC", accent: "#B8653A" },
-      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80",
-      nav: ["Classes", "Coaching", "Book"],
-      headline: "Train with intent.",
-    },
-    {
-      id: "skyline",
-      title: "Skyline Interiors",
-      industry: "Interior designer",
-      tag: "Concept",
-      description: "Image-first portfolio with project case studies and a consultation request form.",
-      palette: { bg: "#ECEAE4", ink: "#1E1E1C", accent: "#6C7A64" },
-      image: "/images/london_luxury_penthouse_1794274508266.jpg",
-      nav: ["Projects", "Studio", "Contact"],
-      headline: "Spaces that feel like you.",
+      summary: "An image-led portfolio that wins bigger, better-fit enquiries.",
+      built: ["Project case studies", "Services & process pages", "Consultation request form"],
+      goal: "Higher-quality enquiries",
+      url: "",
     },
   ],
+
+  /* 3. THE PROBLEM: why outdated websites lose customers */
+  problem: {
+    // TODO: double-check these figures and sources before launch
+    stats: [
+      { value: "53%", text: "of mobile visits are abandoned if a page takes longer than 3 seconds to load.", source: "Google / DoubleClick, 2016" },
+      { value: "75%", text: "of people judge a business's credibility by the design of its website.", source: "Stanford Web Credibility Research" },
+      { value: "0.05s", text: "is all it takes for a visitor to form a first impression of a website.", source: "Lindgaard et al., 2006" },
+    ],
+    signs: [
+      { title: "It's slow", body: "Every extra second of loading sends people back to Google, and on to a competitor." },
+      { title: "It breaks on phones", body: "Most local searches happen on a phone. Tiny text and broken layouts lose them instantly." },
+      { title: "It doesn't say what you do", body: "If visitors can't tell what you offer and where in a few seconds, they leave." },
+      { title: "There's no clear next step", body: "No obvious way to call, book or enquire means interest never turns into business." },
+      { title: "Google can't find it", body: "Without the basics of SEO, the people searching for you never see you." },
+      { title: "It looks out of date", body: "An old design quietly tells customers the business might be out of date too." },
+    ],
+    // "Only on social media?" block: why a business needs a website at all
+    whyWebsite: {
+      eyebrow: "Only on Instagram or TikTok?",
+      headlineStart: "Social media gets you noticed.",
+      headlineAccent: "A website gets you chosen.",
+      intro:
+        "Social is brilliant for attention. But when someone's deciding whether to trust you with their money, they look you up, and if there's no website, a lot of them move on.",
+      flow: [
+        { label: "Social media", result: "Attention", body: "People discover you, scroll past, maybe follow." },
+        { label: "Your website", result: "Trust", body: "They check you're legit, see your prices and services, and get in touch." },
+      ],
+      reasons: [
+        { title: "It builds trust", body: "A proper website is the first thing people check before they spend money with someone new." },
+        { title: "It proves you're a real business", body: "Your own domain, email and site say \"established\". A profile on someone else's app says \"side hustle\"." },
+        { title: "You can actually run ads", body: "Google and Meta ads need somewhere to send people. Without a website there's nowhere to land, and nothing to track." },
+        { title: "You can build a brand", body: "On social you're squeezed into the same template as everyone else. A website is where your brand gets its own space." },
+        { title: "You own it", body: "Algorithms change, reach drops and accounts get banned. Your website and your customers stay yours." },
+        { title: "Google can find you", body: "People searching \"near me\" find websites, not Instagram posts. No site means no search traffic." },
+      ],
+    },
+  },
+
+  /* 4. OUR APPROACH: consumer understanding + careful design and build */
+  approach: {
+    pillars: [
+      {
+        kicker: "01 · Understanding",
+        title: "We start with your customers.",
+        body: "Before we design anything, we learn who your customers are, what they search for, what makes them hesitate, and what makes them choose you.",
+        points: [
+          "Customer and competitor research before any design",
+          "Copy written around the questions customers actually ask",
+          "One clear next step on every page",
+        ],
+      },
+      {
+        kicker: "02 · Building",
+        title: "Then we design and build it.",
+        body: "We turn that understanding into a fast, modern website, designed from scratch for your business. A small team and a lean process mean no waiting around and no agency overheads.",
+        points: [
+          "Live in weeks, not months",
+          "More polish for the same budget",
+          "Every word and pixel checked by us",
+        ],
+      },
+    ],
+    outcome: "The result is a website that answers your customers' questions and makes it easy for them to get in touch.",
+  },
+
+  /* 5. PROCESS */
+  process: [
+    { step: "01", title: "Discover", timing: "Day 1", description: "A free consultation about your business, your customers and what the site needs to achieve." },
+    { step: "02", title: "Design", timing: "Week 1", description: "We design your homepage first, share it with you and refine it together until it feels right." },
+    { step: "03", title: "Build", timing: "Week 2", description: "We build the full site, add your content and test it on phones, tablets and desktops." },
+    { step: "04", title: "Launch", timing: "Go live", description: "We connect your domain, set up Google and analytics, and stay on hand afterwards." },
+  ],
+
+
+  /* 7. TESTIMONIALS
+     Only add real feedback from real clients, with their permission.
+     While this list is empty, the section shows an honest "we're new" message.
+     Example:
+     { quote: "…", name: "Jane Smith", role: "Owner", business: "Ember & Oak", photo: "" },
+  */
+  testimonials: [] as { quote: string; name: string; role: string; business: string; photo?: string }[],
 
   faq: [
     {
@@ -232,8 +209,8 @@ export const siteConfig = {
       a: "A one-page Starter site is usually live in about a week. A multi-page Business site takes around two weeks. The biggest factor is how quickly we get your content (text, photos, logo).",
     },
     {
-      q: "Do I need to have my text and photos ready?",
-      a: "It helps, but it's not essential. We'll give you a simple checklist, and we can write or polish your copy and source quality stock photos if needed.",
+      q: "Will my site be original, or a template?",
+      a: "Original. Every design, word and page is shaped by us around your business and your customers, so your site won't look like anyone else's.",
     },
     {
       q: "Who owns the website?",
@@ -241,31 +218,33 @@ export const siteConfig = {
     },
     {
       q: "Can I update the site myself?",
-      a: "Yes. We'll show you how to edit text and images. If you'd rather not touch it, the care plan covers monthly edits for you.",
+      a: "Yes. We'll show you how to edit text and images. If you'd rather not touch it, we can make the changes for you.",
     },
     {
       q: "How does payment work?",
-      a: "50% up front to book your slot and 50% when you're happy and ready to launch. Hosting and domain costs are passed on at cost, or included in the care plan.",
+      a: "50% up front to book your slot and 50% when you're happy and ready to launch. Hosting and domain costs are passed on at cost.",
     },
     {
       q: "I already have a website. Can you improve it?",
-      a: "Absolutely. Redesigns are a big part of what we do. We'll keep your domain, move your content over and set up redirects so you don't lose your Google rankings.",
+      a: "Absolutely. We'll keep your domain, move your content over and set up redirects so you don't lose your Google rankings.",
     },
   ],
 
+  /* 8. FINAL CTA: free website consultation */
   contact: {
-    eyebrow: "Start a project",
-    heading: "Let's build something you're proud to share.",
+    eyebrow: "Free consultation",
+    heading: "Get a free website consultation.",
     subheading:
-      "Tell us a little about your business. We reply within one working day with next steps and a time for a free discovery call.",
-    projectTypes: ["New website", "Redesign of an existing site", "Online shop / bookings", "Not sure yet"],
+      "Tell us a little about your business. Within one working day we'll book a free 20-minute call to look at your current site (if you have one) and talk through what would win you more customers. No obligation.",
+    submitLabel: "Book my free consultation",
+    projectTypes: ["New website", "Portfolio & walkthrough", "Redesign of an existing site", "Online shop / bookings", "Not sure yet"],
     budgets: ["Under £500", "£500 – £1,500", "£1,500 – £3,000", "£3,000+", "Not sure yet"],
   },
+
+
 
   footer: {
     cta: "Got something in mind?",
     copyright: `© ${new Date().getFullYear()} Upscaled. All rights reserved.`,
   },
 };
-
-export type Project = (typeof siteConfig.portfolio)[number];

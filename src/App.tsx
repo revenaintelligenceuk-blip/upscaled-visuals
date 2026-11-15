@@ -1,26 +1,24 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import StatementSection from "./components/StatementSection";
-import BeforeAfterSlider from "./components/BeforeAfterSlider";
-import ServicesSection from "./components/ServicesSection";
-import PortfolioGrid from "./components/PortfolioGrid";
-import WhoItsForSection from "./components/WhoItsForSection";
+import PortfolioSection from "./components/PortfolioSection";
+import ProblemSection from "./components/ProblemSection";
+import ApproachSection from "./components/ApproachSection";
 import ProcessSection from "./components/ProcessSection";
-import PackagesSection from "./components/PackagesSection";
+import TestimonialsSection from "./components/TestimonialsSection";
 import FaqSection from "./components/FaqSection";
 import BookingSection from "./components/BookingSection";
 import Footer from "./components/Footer";
 import { siteConfig } from "./siteConfig";
 
-/** All copy, prices and contact details are edited in src/siteConfig.ts. */
+/**
+ * Page order: Hero → Portfolio → The problem → Our approach → Process →
+ * Testimonials → FAQ → Final CTA (free consultation).
+ * No pricing section on purpose: prices are discussed in the consultation.
+ * All copy and contact details are edited in src/siteConfig.ts.
+ */
 export default function App() {
   const [projectType, setProjectType] = useState<string>(siteConfig.contact.projectTypes[0]);
-
-  // Map a pricing card to a sensible "What do you need?" option in the form.
-  const handleSelectPackage = (name: string) => {
-    setProjectType(name === "Custom" ? "Online shop / bookings" : `${name} package`);
-  };
 
   return (
     <div className="min-h-screen bg-ink text-ivory">
@@ -30,13 +28,11 @@ export default function App() {
       <Navbar />
       <main id="main">
         <Hero />
-        <StatementSection />
-        <BeforeAfterSlider />
-        <ServicesSection />
-        <PortfolioGrid />
-        <WhoItsForSection />
+        <PortfolioSection onRequestWalkthrough={() => setProjectType("Portfolio & walkthrough")} />
+        <ProblemSection />
+        <ApproachSection />
         <ProcessSection />
-        <PackagesSection onSelectPackage={handleSelectPackage} />
+        <TestimonialsSection />
         <FaqSection />
         <BookingSection selectedService={projectType} />
       </main>

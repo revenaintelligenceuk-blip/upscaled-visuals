@@ -9,8 +9,8 @@ export default function FaqSection() {
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 sm:px-8 lg:grid-cols-12">
         <Reveal className="lg:col-span-4">
           <Label>FAQ</Label>
-          <h2 className="mt-5 font-serif text-4xl font-light leading-[1.05] tracking-tight text-ivory sm:text-6xl">
-            Good <em className="text-brass">questions.</em>
+          <h2 className="mt-5 text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-ivory sm:text-6xl">
+            Common questions
           </h2>
           <p className="mt-5 font-light text-muted">
             Something we haven't covered?{" "}
@@ -24,7 +24,7 @@ export default function FaqSection() {
         <div className="lg:col-span-7 lg:col-start-6">
           {siteConfig.faq.map((item) => (
             <details key={item.q} className="group border-t border-line py-7 last:border-b">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-serif text-2xl font-light text-ivory [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-xl font-medium tracking-[-0.02em] text-ivory sm:text-2xl [&::-webkit-details-marker]:hidden">
                 {item.q}
                 <Plus size={20} strokeWidth={1.25} className="shrink-0 text-brass transition-transform duration-300 group-open:rotate-45" />
               </summary>

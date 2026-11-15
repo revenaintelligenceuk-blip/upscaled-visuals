@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://upscaledvisuals.co.uk/sitemap.xml

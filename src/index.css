@@ -4,28 +4,32 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", serif;
-  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-sans: "Geist Variable", "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
 
-  /* Upscaled palette (the original charcoal / ivory / brass) */
+  /* Upscaled palette: charcoal / ivory / brass */
   --color-ink: #0e0e0c;
-  --color-card: #141412;
-  --color-card-2: #1a1a17;
-  --color-line: #262622;
+  --color-card: #151513;
+  --color-card-2: #1b1b18;
+  --color-line: #2a2a25;
   --color-ivory: #f2eee6;
+  --color-paper: #f6f3ec;
+  --color-paper-line: #ddd7c9;
   --color-muted: #a8a398;
+  --color-stone: #6b675f;
   --color-brass: #c9b48a;
-  --color-brass-light: #d8c6a0;
+  --color-brass-light: #ddcba5;
+  --color-brass-deep: #8a7445;
 
   /* shadcn tokens used by components/ui */
   --color-background: #0e0e0c;
   --color-foreground: #f2eee6;
   --color-primary: #f2eee6;
   --color-primary-foreground: #0e0e0c;
-  --color-secondary: #1a1a17;
+  --color-secondary: #1b1b18;
   --color-secondary-foreground: #f2eee6;
-  --color-accent: #1a1a17;
+  --color-accent: #1b1b18;
   --color-accent-foreground: #f2eee6;
   --color-destructive: #b4453a;
   --color-input: #2e2e29;
@@ -42,27 +46,148 @@ body {
   color: var(--color-ivory);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
 }
 
 ::selection {
-  background: rgb(201 180 138 / 0.3);
+  background: rgb(201 180 138 / 0.35);
   color: var(--color-ivory);
 }
 
-/* Gentle reveal on scroll */
+/* Faint grids (dark and light sections) */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(242 238 230 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(242 238 230 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.bg-grid-light {
+  background-image:
+    linear-gradient(to right, rgb(14 14 12 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(14 14 12 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Highlighter stroke behind a phrase */
+.mark {
+  background: linear-gradient(to top, rgb(201 180 138 / 0.55) 42%, transparent 42%);
+  padding: 0 0.15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ---------- Motion system ---------- */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Gentle reveal on scroll (stagger with --reveal-delay) */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
+  transform: translateY(12px);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 .reveal.is-visible {
   opacity: 1;
   transform: none;
 }
 
+/* Hero intro: words rise out of a mask, then the rest fades up */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.word {
+  display: inline-block;
+  transform: translateY(105%);
+  animation: word-rise 1s var(--ease-out) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes word-rise {
+  to { transform: none; }
+}
+.intro {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: intro-up 1s var(--ease-out) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes intro-up {
+  to { opacity: 1; transform: none; }
+}
+
+/* Slow drifting brass glow behind the hero */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(201 180 138 / 0.18), transparent 65%);
+  filter: blur(40px);
+  animation: glow-drift 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes glow-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6%, 8%) scale(1.08); }
+  100% { transform: translate(5%, -4%) scale(0.96); }
+}
+
+/* Subtle hover lift for cards */
+.lift {
+  transition:
+    transform 0.5s var(--ease-out),
+    border-color 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out);
+}
+@media (hover: hover) {
+  .lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px -24px rgb(0 0 0 / 0.55);
+  }
+}
+
+/* Infinite marquee (content is duplicated, so -50% loops seamlessly) */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Marching dashed connectors */
+.march {
+  animation: march 1.6s linear infinite;
+}
+@keyframes march {
+  to { stroke-dashoffset: -22; }
+}
+
+/* Hand-drawn annotation strokes draw themselves in */
+.draw path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.4s ease 0.3s;
+}
+.is-visible .draw path,
+.draw.is-visible path {
+  stroke-dashoffset: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+  .draw path { stroke-dashoffset: 0; transition: none; }
+  .word, .intro { opacity: 1; transform: none; animation: none; }
+  .glow, .marquee-track, .march { animation: none; }
+  .lift, .lift:hover { transform: none; }
 }
 
 :focus-visible {
@@ -73,3 +198,17 @@ body {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-ink); }
 ::-webkit-scrollbar-thumb { background: #2a2a26; border-radius: 3px; }
+
+/* Legal pages (privacy, cookies, terms) */
+.legal .lead { margin-top: 2rem; font-size: 1.25rem; line-height: 1.6; color: var(--color-ink); }
+.legal h2 { margin-top: 3rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em; }
+.legal p, .legal li { margin-top: 1rem; font-size: 1rem; line-height: 1.75; color: #3d3a35; }
+.legal ul { margin-top: 0.5rem; padding-left: 1.25rem; list-style: disc; }
+.legal li { margin-top: 0.5rem; }
+.legal li::marker { color: var(--color-brass-deep); }
+.legal strong { color: var(--color-ink); font-weight: 500; }
+.legal a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--color-brass-deep); }
+.legal a:hover { color: var(--color-brass-deep); }
+.legal table { margin-top: 1rem; width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.legal th, .legal td { border: 1px solid var(--color-paper-line); padding: 0.6rem 0.75rem; text-align: left; }
+.legal th { background: #ece7dc; font-weight: 500; }
