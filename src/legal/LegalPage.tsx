@@ -25,20 +25,20 @@ export default function LegalPage({ page }: { page: LegalPageKey }) {
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="on-light min-h-screen bg-paper text-ink">
       <header className="border-b border-paper-line">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-8">
-          <a href="/" className="text-xl font-semibold tracking-[-0.04em]">
-            Upscaled<sup className="ml-0.5 text-[10px] text-brass-deep">®</sup>
+          <a href="/" className="flex min-h-11 items-center text-xl font-semibold tracking-[-0.04em]">
+            {siteConfig.brand.name}
           </a>
-          <a href="/" className="inline-flex items-center gap-1.5 text-sm text-stone hover:text-ink">
-            <ArrowLeft size={14} /> Back to site
+          <a href="/" className="flex min-h-11 items-center gap-1.5 text-sm text-stone hover:text-ink">
+            <ArrowLeft size={14} aria-hidden="true" /> Back to site
           </a>
         </div>
       </header>
 
       <main id="main" className="legal mx-auto max-w-3xl px-4 py-16 sm:px-8 sm:py-24">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-stone">Last updated {siteConfig.legal.lastUpdated}</p>
+        <p className="text-sm text-stone">Last updated {siteConfig.legal.lastUpdated}</p>
         <h1 className="mt-4 text-4xl font-medium tracking-[-0.04em] sm:text-6xl">{titles[page]}</h1>
         {page === "privacy" && <Privacy />}
         {page === "cookies" && <Cookies />}
@@ -46,7 +46,8 @@ export default function LegalPage({ page }: { page: LegalPageKey }) {
       </main>
 
       <footer className="border-t border-paper-line">
-        <BusinessDetails className="mx-auto max-w-3xl px-4 py-10 text-xs leading-relaxed text-stone sm:px-8" />
+        {/* The terms and privacy pages already name the business in their text. */}
+        <BusinessDetails identity={page === "cookies"} className="mx-auto max-w-3xl px-4 py-8 text-sm leading-relaxed text-stone sm:px-8" />
       </footer>
     </div>
   );
@@ -60,8 +61,9 @@ function Privacy() {
   const processors = [
     { who: legal.hostingProvider, why: "hosts this website. Like any web server, it briefly records technical data such as IP address and browser type to keep the site running and secure." },
     { who: legal.emailProvider, why: "provides our email, where your enquiries and our conversations with you are stored." },
-    brand.formEndpoint && { who: brand.formProvider || "[FORM PROVIDER]", why: "receives the enquiry form on this site and forwards it to us by email." },
-    brand.bookingUrl && { who: "[BOOKING PROVIDER, e.g. Cal.com]", why: "lets you book a consultation call with us." },
+    brand.formEndpoint && { who: brand.formProvider, why: "receives the enquiry form on this site and forwards it to us by email." },
+    brand.bookingUrl && { who: brand.bookingProvider, why: "lets you book a call with us, if you choose to use the booking link." },
+    { who: "Vercel Inc. (USA)", why: "provides Vercel Web Analytics, which gives us anonymous, aggregated visitor statistics without cookies." },
     { who: "Our accountant and HMRC", why: "if you become a client, for bookkeeping and tax purposes." },
   ].filter(Boolean) as { who: string; why: string }[];
 
@@ -80,10 +82,10 @@ function Privacy() {
 
       <h2>What we collect</h2>
       <ul>
-        <li><strong>When you send an enquiry:</strong> your name, email address and, if you choose to give them, your business name, current website, the type of project, a rough budget and your message.</li>
+        <li><strong>When you send an enquiry:</strong> your name, email address, your website address (needed for a website audit), the type of help you want, a rough budget and your message.</li>
         <li><strong>When you email or call us:</strong> whatever you choose to tell us, and your contact details.</li>
         <li><strong>If you become a client:</strong> the details we need to deliver and invoice the project, such as billing name, address and payment records.</li>
-        <li><strong>When you visit the site:</strong> our hosting provider's servers record basic technical data (IP address, browser, pages requested) in security logs. We do not use analytics, advertising trackers or cookies. See our <a href="/cookies/">cookie policy</a>.</li>
+        <li><strong>When you visit the site:</strong> our hosting provider's servers record basic technical data (IP address, browser, pages requested) in security logs. We use privacy-friendly analytics that don't set cookies, which show us which pages are visited, the referring site, and general details such as country, device and browser. We don't use advertising trackers. See our <a href="/cookies/">cookie policy</a>.</li>
       </ul>
       <p>Please don't send us sensitive information (for example about health) through the form. We don't need it.</p>
 
@@ -93,6 +95,7 @@ function Privacy() {
         <li><strong>To deliver a project you've hired us for.</strong> Lawful basis: performance of our contract with you.</li>
         <li><strong>To keep accounts and meet tax rules.</strong> Lawful basis: legal obligation.</li>
         <li><strong>To keep the website secure.</strong> Lawful basis: our legitimate interest in protecting the site.</li>
+        <li><strong>To understand how the website is used.</strong> Lawful basis: our legitimate interest in improving it.</li>
       </ul>
       <p>
         We will not add you to a mailing list or send you marketing without your clear permission, and we never sell or rent your
@@ -154,13 +157,19 @@ function Cookies() {
   return (
     <>
       <p className="lead">
-        Short version: this website does not use cookies, and it doesn't use any similar technology to store or read information on
-        your device.
+        Short version: this website does not set cookies. We use privacy-friendly analytics that don't set cookies.
+      </p>
+
+      <h2>Analytics</h2>
+      <p>
+        We use Vercel Web Analytics to count visits and see which pages are useful. It doesn't set cookies or store anything on
+        your device, and it doesn't follow you across other websites. We see aggregated figures such as page views, referring
+        sites, country, device type and browser. Our <a href="/privacy/">privacy policy</a> says more.
       </p>
 
       <h2>What we don't use</h2>
       <ul>
-        <li>No analytics (such as Google Analytics).</li>
+        <li>No cookie-based analytics (such as Google Analytics).</li>
         <li>No advertising or social media tracking pixels.</li>
         <li>No session recording, chat widgets or embedded videos and maps that set cookies.</li>
         <li>No browser storage (localStorage or sessionStorage).</li>
@@ -185,7 +194,7 @@ function Cookies() {
 
       <h2>If this changes</h2>
       <p>
-        If we ever add something that uses cookies, such as analytics or a booking widget, we'll list it here first. Where the law
+        If we ever add something that uses cookies, such as an embedded booking widget, we'll list it here first. Where the law
         requires it, we'll ask for your permission before it's switched on, and you'll be able to change your mind at any time.
       </p>
 
@@ -207,10 +216,10 @@ function Terms() {
       <h2>Information on this site</h2>
       <p>
         We work to keep the information here accurate and up to date, but it is general information about our services, not an offer
-        that can be accepted. Prices shown are a guide for typical projects.{" "}
+        that can be accepted. This website doesn't list prices: we give each project a fixed written quote.{" "}
         {legal.vatNumber
-          ? "Prices are shown excluding VAT, which will be added at the current rate."
-          : "We are not currently VAT-registered, so no VAT is added to our prices."}{" "}
+          ? "VAT is added to quotes at the current rate."
+          : "We are not currently VAT-registered, so no VAT is added to our quotes."}{" "}
         Every project is confirmed in a written quote and agreement, and that agreement, not this website, sets out what we'll
         deliver, the price and the payment terms.
       </p>

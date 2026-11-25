@@ -1,6 +1,6 @@
 # Upscaled — studio website
 
-Marketing site for Upscaled, the web design studio run by Raffaele & Brilliana.
+Marketing site for Upscaled, a web design studio.
 
 ## Editing content
 

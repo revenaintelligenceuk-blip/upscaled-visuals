@@ -20,7 +20,7 @@
   --color-stone: #6b675f;
   --color-brass: #c9b48a;
   --color-brass-light: #ddcba5;
-  --color-brass-deep: #8a7445;
+  --color-brass-deep: #6f5b30; /* AA contrast on paper */
 
   /* shadcn tokens used by components/ui */
   --color-background: #0e0e0c;
@@ -54,26 +54,12 @@ body {
   color: var(--color-ivory);
 }
 
-/* Faint grids (dark and light sections) */
+/* Faint grid (work image placeholders) */
 .bg-grid {
   background-image:
     linear-gradient(to right, rgb(242 238 230 / 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(242 238 230 / 0.05) 1px, transparent 1px);
   background-size: 64px 64px;
-}
-.bg-grid-light {
-  background-image:
-    linear-gradient(to right, rgb(14 14 12 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(14 14 12 / 0.05) 1px, transparent 1px);
-  background-size: 64px 64px;
-}
-
-/* Highlighter stroke behind a phrase */
-.mark {
-  background: linear-gradient(to top, rgb(201 180 138 / 0.55) 42%, transparent 42%);
-  padding: 0 0.15em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
 }
 
 /* ---------- Motion system ---------- */
@@ -82,7 +68,8 @@ body {
 }
 
 /* Gentle reveal on scroll (stagger with --reveal-delay) */
-.reveal {
+/* Hidden only when scripts run, so pre-rendered content shows without them. */
+.js .reveal {
   opacity: 0;
   transform: translateY(12px);
   transition:
@@ -90,7 +77,7 @@ body {
     transform 0.7s var(--ease-out);
   transition-delay: var(--reveal-delay, 0ms);
 }
-.reveal.is-visible {
+.js .reveal.is-visible {
   opacity: 1;
   transform: none;
 }
@@ -112,6 +99,13 @@ body {
 @keyframes word-rise {
   to { transform: none; }
 }
+/* Moves without fading, so the main paragraph paints straight away. */
+.rise {
+  animation: rise 0.9s var(--ease-out) both;
+}
+@keyframes rise {
+  from { transform: translateY(12px); }
+}
 .intro {
   opacity: 0;
   transform: translateY(16px);
@@ -126,10 +120,16 @@ body {
 .glow {
   position: absolute;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgb(201 180 138 / 0.18), transparent 65%);
-  filter: blur(40px);
-  animation: glow-drift 18s ease-in-out infinite alternate;
+  /* Soft edges come from the gradient: a blur filter is too costly on phones. */
+  background: radial-gradient(circle, rgb(201 180 138 / 0.15), rgb(201 180 138 / 0.05) 40%, transparent 68%);
   pointer-events: none;
+}
+/* Drift and film grain only on larger screens */
+@media (min-width: 768px) {
+  .glow { animation: glow-drift 18s ease-in-out infinite alternate; }
+}
+@media (max-width: 767px) {
+  .grain { display: none; }
 }
 @keyframes glow-drift {
   0% { transform: translate(0, 0) scale(1); }
@@ -140,11 +140,11 @@ body {
 /* Hero: faded grid and film grain */
 .hero-grid {
   background-image:
-    linear-gradient(to right, rgb(242 238 230 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(242 238 230 / 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgb(242 238 230 / 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(242 238 230 / 0.09) 1px, transparent 1px);
   background-size: 72px 72px;
-  mask-image: radial-gradient(ellipse 80% 70% at 70% 35%, #000 20%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 70% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 85% 75% at 70% 35%, #000 35%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 70% 35%, #000 35%, transparent 80%);
 }
 .grain {
   opacity: 0.07;
@@ -166,49 +166,35 @@ body {
   }
 }
 
-/* Infinite marquee (content is duplicated, so -50% loops seamlessly) */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 40s linear infinite;
-}
-.marquee:hover .marquee-track { animation-play-state: paused; }
-@keyframes marquee {
-  to { transform: translateX(-50%); }
-}
-
-/* Marching dashed connectors */
-.march {
-  animation: march 1.6s linear infinite;
-}
-@keyframes march {
-  to { stroke-dashoffset: -22; }
-}
-
-/* Hand-drawn annotation strokes draw themselves in */
-.draw path {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  transition: stroke-dashoffset 1.4s ease 0.3s;
-}
-.is-visible .draw path,
-.draw.is-visible path {
-  stroke-dashoffset: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-  .draw path { stroke-dashoffset: 0; transition: none; }
-  .word, .intro { opacity: 1; transform: none; animation: none; }
-  .glow, .marquee-track, .march { animation: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .word, .intro, .rise { opacity: 1; transform: none; animation: none; }
+  .glow { animation: none; }
   .lift, .lift:hover { transform: none; }
 }
 
 :focus-visible {
-  outline: 1px solid var(--color-brass);
+  outline: 2px solid var(--color-brass);
   outline-offset: 3px;
 }
+/* Brass is invisible on the light and gold sections, so switch to ink there. */
+.on-light :focus-visible {
+  outline-color: var(--color-ink);
+}
+.on-light .bg-ink :focus-visible {
+  outline-color: var(--color-brass);
+}
+
+/* Speed up the first paint by skipping off-screen sections. The first scroll,
+   tap or key press adds .rendered (see index.html), so jump links stay accurate. */
+html.js:not(.rendered) main > section:not(#top) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* Anchor links land below the fixed header */
+section[id] { scroll-margin-top: 3.5rem; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-ink); }

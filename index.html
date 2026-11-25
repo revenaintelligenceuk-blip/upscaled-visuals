@@ -3,37 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upscaled | Websites for Small Businesses</title>
-    <meta name="description" content="Upscaled is a two-person web studio. We design, build and launch refined, modern websites for small businesses, at a fixed price, live in about two weeks." />
+    <title>Web Design for UK Small Businesses | Upscaled, London</title>
+    <meta name="description" content="London web design studio building custom websites for UK small businesses. Fixed price, live in about two weeks." />
     <meta name="theme-color" content="#0E0E0C" />
-    <!-- TODO: confirm the live domain (also used in robots.txt, sitemap.xml and the JSON-LD below) -->
+    <!-- TODO: confirm the live domain (also in siteConfig.brand.url, the legal pages, robots.txt, sitemap.xml and llms.txt) -->
     <link rel="canonical" href="https://upscaledvisuals.co.uk/" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta property="og:title" content="Upscaled | Websites for Small Businesses" />
-    <meta property="og:description" content="Refined, fixed-price websites for small businesses. Designed and built by Raffaele & Brilliana." />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:title" content="Web Design for UK Small Businesses | Upscaled" />
+    <meta property="og:description" content="Custom websites for UK small businesses, built by a London studio. Fixed price, live in about two weeks." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://upscaledvisuals.co.uk/" />
+    <meta property="og:site_name" content="Upscaled" />
     <meta property="og:locale" content="en_GB" />
-    <!-- TODO: add a 1200x630 share image at /og-image.jpg, then uncomment both lines and set twitter:card to summary_large_image
-    <meta property="og:image" content="https://upscaledvisuals.co.uk/og-image.jpg" />
-    <meta name="twitter:image" content="https://upscaledvisuals.co.uk/og-image.jpg" /> -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Upscaled | Websites for Small Businesses" />
-    <meta name="twitter:description" content="Websites that make your business look as good as it really is." />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "Upscaled",
-        "url": "https://upscaledvisuals.co.uk/",
-        "description": "A two-person web design and development studio building fixed-price websites for small businesses.",
-        "email": "hello@upscaledvisuals.co.uk",
-        "areaServed": "GB",
-        "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB" },
-        "founder": [{ "@type": "Person", "name": "Raffaele" }, { "@type": "Person", "name": "Brilliana" }],
-        "priceRange": "£495 - £2,500+",
-        "sameAs": ["https://instagram.com/upscaledvisuals"]
-      }
+    <meta property="og:image" content="https://upscaledvisuals.co.uk/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Upscaled: Websites that turn visitors into customers." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Web Design for UK Small Businesses | Upscaled" />
+    <meta name="twitter:description" content="Custom websites for UK small businesses, built by a London studio. Fixed price, live in about two weeks." />
+    <meta name="twitter:image" content="https://upscaledvisuals.co.uk/og-image.png" />
+    <!-- Structured data is added here at build time (scripts/prerender.mjs) from src/siteConfig.ts -->
+    <script>
+      (function (root) {
+        root.classList.add("js");
+        var render = function () { root.classList.add("rendered"); };
+        if (location.hash) render();
+        else ["scroll", "wheel", "touchstart", "pointerdown", "keydown", "focusin", "click"].forEach(function (type) {
+          addEventListener(type, render, { once: true, passive: true, capture: true });
+        });
+      })(document.documentElement);
     </script>
   </head>
   <body>
