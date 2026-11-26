@@ -3,12 +3,15 @@ import { renderToString } from "react-dom/server";
 import App from "./App";
 import LegalPage, { type LegalPageKey } from "./legal/LegalPage";
 import WorkPage from "./work/WorkPage";
+import NotFoundPage from "./NotFoundPage";
 import { siteConfig } from "./siteConfig";
 
 export const siteUrl = siteConfig.brand.url;
 
-export const render = (page: "home" | "work" | LegalPageKey) =>
-  renderToString(page === "home" ? <App /> : page === "work" ? <WorkPage /> : <LegalPage page={page} />);
+export const render = (page: "home" | "work" | "notFound" | LegalPageKey) =>
+  renderToString(
+    page === "home" ? <App /> : page === "work" ? <WorkPage /> : page === "notFound" ? <NotFoundPage /> : <LegalPage page={page} />
+  );
 
 /** Google Search Console tag, once its code is set in siteConfig. */
 export const verificationTag = () => {

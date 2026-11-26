@@ -8,6 +8,20 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
+  const [current, setCurrent] = useState("");
+  const [pill, setPill] = useState({ left: 0, width: 0 });
+  const navRef = useRef<HTMLElement>(null);
+
+  // Slide the highlight under whichever link matches the section on screen.
+  useEffect(() => {
+    const place = () => {
+      const link = navRef.current?.querySelector<HTMLElement>('[aria-current="location"]');
+      setPill((p) => (link ? { left: link.offsetLeft, width: link.offsetWidth } : { ...p, width: 0 }));
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [current]);
 
   // Header background, plus the thin brass line showing how far down the page you are.
   useEffect(() => {
@@ -17,6 +31,21 @@ export default function Navbar() {
       setScrolled(window.scrollY > 24);
       const max = document.documentElement.scrollHeight - window.innerHeight;
       if (progressRef.current) progressRef.current.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+      // The current section is the last one whose top has passed 40% of the screen.
+      let active = "";
+      let activeTop = -Infinity;
+      for (const { href } of siteConfig.navigation) {
+        const id = href.split("#")[1];
+        const top = id ? document.getElementById(id)?.getBoundingClientRect().top : undefined;
+        if (top !== undefined && top <= window.innerHeight * 0.4 && top > activeTop) {
+          active = href;
+          activeTop = top;
+        }
+      }
+      // Past the last linked section, nothing is highlighted.
+      const picker = document.getElementById("need");
+      if (picker && picker.getBoundingClientRect().top <= window.innerHeight * 0.4) active = "";
+      setCurrent(active);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -72,16 +101,23 @@ export default function Navbar() {
           {brand.name}
         </a>
 
-        <nav aria-label="Main" className="hidden items-center gap-8 text-sm text-muted lg:flex">
-          {navigation.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="flex min-h-11 items-center underline-offset-8 transition-colors hover:text-ivory hover:underline hover:decoration-brass"
-            >
-              {item.label}
-            </a>
-          ))}
+        <nav ref={navRef} aria-label="Main" className="relative hidden items-center gap-2 text-sm text-muted lg:flex">
+          <span aria-hidden="true" className="nav-pill" style={{ transform: `translateX(${pill.left}px)`, width: pill.width, opacity: pill.width ? 1 : 0 }} />
+          {navigation.map((item) => {
+            const on = item.href === current;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                aria-current={on ? "location" : undefined}
+                className={`relative flex min-h-11 items-center px-4 underline-offset-8 ${
+                  on ? "text-ink" : "hover:text-ivory hover:underline hover:decoration-brass"
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -111,7 +147,13 @@ export default function Navbar() {
         <div ref={menuRef} id="mobile-menu" className="max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-line bg-ink px-4 pb-10 pt-2 lg:hidden">
           <nav aria-label="Mobile" className="flex flex-col">
             {navigation.map((item) => (
-              <a key={item.href} href={item.href} onClick={close} className="border-b border-line py-4 font-serif text-3xl text-ivory">
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={close}
+                aria-current={item.href === current ? "location" : undefined}
+                className={`border-b border-line py-4 font-serif text-3xl ${item.href === current ? "italic text-brass" : "text-ivory"}`}
+              >
                 {item.label}
               </a>
             ))}

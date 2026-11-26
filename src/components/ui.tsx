@@ -1,11 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-export const scrollToId = (id: string) => {
-  // Lay out every section first, so the scroll target is in its final position.
-  document.documentElement.classList.add("rendered");
-  document.getElementById(id.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
-};
-
 /** Adds `is-visible` to the element once it scrolls into view. */
 export function useReveal<T extends HTMLElement>() {
   const ref = useRef<T>(null);

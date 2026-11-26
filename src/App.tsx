@@ -30,7 +30,7 @@ export default function App() {
         {siteConfig.showWork && <PortfolioSection />}
         <FeaturesSection />
         <ProcessSection />
-        <AboutSection />
+        {siteConfig.showAbout && <AboutSection />}
         <TestimonialsSection />
         <FaqSection />
         <ContactSection />

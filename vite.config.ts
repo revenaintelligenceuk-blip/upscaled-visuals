@@ -29,6 +29,7 @@ export default defineConfig(() => {
         // The homepage plus the three legal pages (served at /privacy/, /cookies/, /terms/).
         input: {
           main: path.resolve(import.meta.dirname, 'index.html'),
+          notFound: path.resolve(import.meta.dirname, '404.html'),
           ...(siteConfig.showWork ? {work: path.resolve(import.meta.dirname, 'work/index.html')} : {}),
           privacy: path.resolve(import.meta.dirname, 'privacy/index.html'),
           cookies: path.resolve(import.meta.dirname, 'cookies/index.html'),

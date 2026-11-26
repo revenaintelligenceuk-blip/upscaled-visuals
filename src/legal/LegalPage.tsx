@@ -1,9 +1,7 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { siteConfig } from "../siteConfig";
-import Backdrop from "../components/Backdrop";
-import DottedTrailCursor from "../components/ui/dotted-trail-cursor";
-import { dotShape, dotThemes } from "../components/DotSection";
+import DotField from "../components/DotField";
 import { BusinessDetails, businessIdentity } from "./business";
 
 /*
@@ -30,10 +28,9 @@ export default function LegalPage({ page }: { page: LegalPageKey }) {
   return (
     <div className="on-light relative isolate min-h-screen overflow-hidden bg-paper text-ink">
       {/* Fixed to the screen, so long pages cost no more than short ones */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
-        <DottedTrailCursor className="h-full!" {...dotThemes.light} {...dotShape}>
-          <div className="square-grid square-grid-light" />
-        </DottedTrailCursor>
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 isolate -z-10">
+        <DotField tone="light" />
+        <div className="square-grid square-grid-light" />
       </div>
       <header className="border-b border-paper-line">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-8">
@@ -71,8 +68,7 @@ function Privacy() {
     { who: legal.hostingProvider || "Our website hosting provider", why: "hosts this website. Like any web server, it briefly records technical data such as IP address and browser type to keep the site running and secure." },
     { who: legal.emailProvider || "Our email provider", why: "provides our email, where your enquiries and our conversations with you are stored." },
     { who: "Vercel Inc. (USA)", why: "provides Vercel Web Analytics, which gives us anonymous, aggregated visitor statistics without cookies." },
-    { who: "Our accountant and HMRC", why: "if you become a client, for bookkeeping and tax purposes." },
-  ].filter(Boolean) as { who: string; why: string }[];
+  ];
 
   return (
     <>
@@ -115,7 +111,10 @@ function Privacy() {
           <li key={p.who}><strong>{p.who}</strong> {p.why}</li>
         ))}
       </ul>
-      <p>We may also share information if the law requires it, for example with HMRC or the police.</p>
+      <p>
+        If you become a client, we may share billing details with our accountant for bookkeeping and tax. We may also share
+        information if the law requires it, for example with HMRC or the police.
+      </p>
 
       <h2>International transfers</h2>
       <p>

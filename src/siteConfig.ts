@@ -5,21 +5,25 @@
  *
  * Page order: Hero → logo banner (once there are logos) → Work (once ready) →
  * What you get → How it works → About → Client stories (once there are quotes)
- * → FAQ → Get in touch (once contact.href is set)
+ * → FAQ → What do you need? (once contact.href is set)
  */
 
 /* Set to true once your sample sites are in "portfolio" below. It adds the Work
    section on the homepage, the /work/ page, the menu link and the terms wording. */
 const showWork: boolean = false;
 
+/* Set to true to bring back the "About Upscaled" section and its menu link. */
+const showAbout: boolean = false;
+
 export const siteConfig = {
   showWork,
+  showAbout,
 
   brand: {
     name: "Upscaled",
     wordmark: "upscaled",
     // TODO: confirm the live domain. Also change it in index.html, the legal
-    // page HTML files, public/robots.txt, public/sitemap.xml and public/llms.txt.
+    // page HTML files, public/robots.txt and public/llms.txt.
     url: "https://upscaledvisuals.co.uk",
     description:
       "Upscaled designs and builds custom websites for small businesses in London and across the UK. Mobile-first, with SEO meta tags and analytics.",
@@ -54,16 +58,27 @@ export const siteConfig = {
 
   navigation: [
     ...(showWork ? [{ label: "Work", href: "/work/" }] : []),
+    { label: "What you get", href: "/#more" },
     { label: "How it works", href: "/#process" },
+    ...(showAbout ? [{ label: "About", href: "/#about" }] : []),
     { label: "FAQ", href: "/#faq" },
   ],
 
-  /* CONTACT BUTTON. Hidden while href is empty. Once you have a working email,
-     number or booking link, set it here and the buttons appear across the site.
-     e.g. "mailto:you@yourdomain.co.uk" or "tel:+442012345678" */
+  /* CONTACT BUTTON. Jumps to the "What do you need?" section, which writes an
+     email to brand.email. Set href to "" to hide the buttons and that section. */
   contact: {
-    label: "Get in touch",
-    href: "",
+    label: "Start here",
+    href: "/#need",
+  },
+
+  /* WHAT DO YOU NEED? Visitors tap options and the email writes itself. */
+  picker: {
+    title: "What do you need?",
+    intro: "Choose anything that fits. We'll start the email for you.",
+    options: ["A new website", "A redesign of my website", "A website audit", "Help with AI", "I'm not sure yet"],
+    aiOption: "Help with AI", // must match one of the options
+    subject: "Website enquiry",
+    greeting: "Hello Raffaele and Brilliana,",
   },
 
   /* HERO */
@@ -73,10 +88,15 @@ export const siteConfig = {
     headlineEnd: ".",
     subheadline:
       "We design and build custom websites that make it easy for your customers to get in touch. Based in London, working across the UK.",
+    primary: "Tell us what you need",
     secondary: "See how it works",
-    // A screenshot of one of your sites, shown beside the headline once added,
-    // e.g. { src: "/work/ember-oak.jpg", alt: "Website for Ember & Oak" }
-    image: { src: "", alt: "" },
+    // The row of short facts along the bottom of the first screen.
+    facts: [
+      { title: "Custom design", detail: "No templates" },
+      { title: "Looked after", detail: "We maintain your site after launch" },
+      { title: "Search-ready", detail: "Set up for Google to read" },
+      { title: "UK-wide", detail: "Studio based in London" },
+    ],
   },
 
   /* LOGO BANNER under the hero. Hidden until you add logos. Drop image files
@@ -138,7 +158,7 @@ export const siteConfig = {
     intro: "What a website from us includes, and what you can add.",
     items: [
       { title: "Custom design", body: "A design made around your business, with no templates." },
-      { title: "Mobile-first build", body: "Built for phones first, then for larger screens." },
+      { title: "Easy to get in touch", body: "A site built so your customers can reach you without hunting for how." },
       { title: "SEO meta tags", body: "Page titles and descriptions that tell search engines what each page is about." },
       { title: "Google search visibility", body: "Pages set up so that Google can find and understand them." },
       { title: "Analytics", body: "See how many people visit your site and which pages they view." },
@@ -157,7 +177,7 @@ export const siteConfig = {
       { title: "Call", description: "We talk about your business, your customers and what the site needs to do." },
       { title: "Design", description: "We design your homepage first and refine it with you." },
       { title: "Build", description: "We build the other pages, add your content and test on phones and desktops." },
-      { title: "Launch", description: "We put your site live and check that everything works." },
+      { title: "Launch", description: "We put your site live, check that everything works, then keep it maintained." },
     ],
   },
 
@@ -184,8 +204,8 @@ export const siteConfig = {
       a: "It's original. We design the layout around your business and your customers. We don't start from a bought theme.",
     },
     {
-      q: "Can I edit the site myself?",
-      a: "Yes. At handover we show you how to change text and images.",
+      q: "Who looks after my website once it's live?",
+      a: "We do. We maintain your website after it launches, and we agree what that includes in writing.",
     },
     {
       q: "How does payment work?",

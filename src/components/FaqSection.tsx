@@ -26,7 +26,7 @@ export default function FaqSection() {
         <div className="lg:col-span-7 lg:col-start-6">
           {siteConfig.faq.map((item) => (
             <details key={item.q} className="group border-t border-line last:border-b">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-xl font-medium tracking-[-0.02em] text-ivory sm:text-2xl [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-xl font-medium tracking-[-0.02em] text-ivory transition-[padding,color] duration-300 hover:pl-3 hover:text-brass sm:text-2xl [&::-webkit-details-marker]:hidden">
                 {item.q}
                 <Plus size={20} strokeWidth={1.25} aria-hidden="true" className="shrink-0 text-brass transition-transform duration-300 group-open:rotate-45" />
               </summary>

@@ -9,7 +9,7 @@ const { render, structuredData, verificationTag, siteUrl } = await import(
   pathToFileURL(path.join(root, "dist-ssr/prerender.js"))
 );
 
-const pages = { home: "index.html", work: "work/index.html", privacy: "privacy/index.html", cookies: "cookies/index.html", terms: "terms/index.html" };
+const pages = { home: "index.html", work: "work/index.html", privacy: "privacy/index.html", cookies: "cookies/index.html", terms: "terms/index.html", notFound: "404.html" };
 const slot = '<div id="root"></div>';
 const urls = [];
 
@@ -23,7 +23,7 @@ for (const [page, file] of Object.entries(pages)) {
   html = html.replace(slot, () => `<div id="root">${render(page)}</div>`);
   if (page === "home") html = html.replace("</head>", () => `  ${verificationTag()}\n    ${structuredData()}\n  </head>`);
   fs.writeFileSync(target, html);
-  urls.push(`${siteUrl}/${file.replace("index.html", "")}`);
+  if (page !== "notFound") urls.push(`${siteUrl}/${file.replace("index.html", "")}`);
   console.log(`pre-rendered ${file}`);
 }
 

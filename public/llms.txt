@@ -7,7 +7,7 @@ Upscaled is run by Raffaele and Brilliana from London, working with small busine
 
 ## What you get
 - Custom design, with no templates
-- Mobile-first build
+- Easy for your customers to get in touch
 - SEO meta tags
 - Google search visibility
 - Analytics
@@ -17,7 +17,10 @@ Upscaled is run by Raffaele and Brilliana from London, working with small busine
 1. Call: we talk about your business, your customers and what the site needs to do.
 2. Design: we design your homepage first and refine it with you.
 3. Build: we build the other pages, add your content and test on phones and desktops.
-4. Launch: we put your site live and check that everything works.
+4. Launch: we put your site live, check that everything works, then keep it maintained.
+
+## Maintenance
+We maintain the websites we build after they launch.
 
 ## Quotes and payment
 We send a written quote for each project. Payment is a 50% deposit, then the balance at launch.
