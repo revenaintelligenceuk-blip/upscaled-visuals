@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col gap-2 border-t border-line pt-4 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>{footer.copyright}</p>
+          <p suppressHydrationWarning>{footer.copyright}</p>
           <a href="#main" className="flex min-h-11 w-fit items-center gap-1.5 hover:text-ivory">
             Back to top <ArrowUp size={14} aria-hidden="true" />
           </a>

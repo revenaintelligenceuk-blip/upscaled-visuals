@@ -19,7 +19,25 @@ Copy, FAQ answers, work items and contact details live in
 [`src/legal/LegalPage.tsx`](src/legal/LegalPage.tsx). Search for `TODO` to find
 placeholders that still need confirming before launch.
 
-The domain also appears in the HTML files, `public/robots.txt` and `public/llms.txt`.
+## Search engine tags
+
+Page titles, descriptions, social sharing tags and structured data are in
+[`src/seo.ts`](src/seo.ts). The build writes them into each page, along with
+`sitemap.xml`, so they only appear in `npm run build` and `npm run preview`, not
+on the dev server.
+
+The domain is set in `siteConfig.brand.url`. It also appears in
+`public/robots.txt` and `public/llms.txt`.
+
+`npm run images` redraws the sharing image and icons from `public/favicon.svg`
+and the site's fonts. It needs Chrome or Edge.
+
+## Hosting
+
+The build is a set of static files in `dist/`. Vercel (configured in
+`vercel.json`) and Netlify serve `404.html` with a 404 status automatically. On
+Apache hosting add `ErrorDocument 404 /404.html`. Never add a catch-all rewrite
+to `index.html`.
 
 ## Parts that stay hidden until filled in
 

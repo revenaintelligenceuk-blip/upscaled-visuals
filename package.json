@@ -7,6 +7,7 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build && vite build --ssr src/prerender.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
+    "images": "node scripts/brand-images.mjs",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },

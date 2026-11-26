@@ -22,11 +22,11 @@ export const siteConfig = {
   brand: {
     name: "Upscaled",
     wordmark: "upscaled",
-    // TODO: confirm the live domain. Also change it in index.html, the legal
-    // page HTML files, public/robots.txt and public/llms.txt.
+    // TODO: confirm the live domain. Also change it in public/robots.txt and
+    // public/llms.txt. Search tags and the sitemap pick it up from here.
     url: "https://upscaledvisuals.co.uk",
     description:
-      "Upscaled designs and builds custom websites for small businesses in London and across the UK. Mobile-first, with SEO meta tags and analytics.",
+      "Custom web design for businesses in London. We design, build and maintain websites that make it easy for your customers to get in touch, UK-wide.",
     email: "hello@upscaledvisuals.co.uk", // TODO: confirm the real inbox
     phone: "", // Hidden while empty. e.g. "+442012345678" (add it to public/llms.txt too)
     instagramHandle: "@upscaledvisuals", // TODO: confirm handle
@@ -83,7 +83,7 @@ export const siteConfig = {
 
   /* HERO */
   hero: {
-    headlineStart: "Web design for small businesses in",
+    headlineStart: "Web design for businesses in",
     headlineAccent: "London",
     headlineEnd: ".",
     subheadline:
@@ -184,7 +184,7 @@ export const siteConfig = {
   /* ABOUT */
   about: {
     title: "About Upscaled",
-    text: "We're Raffaele and Brilliana. We run Upscaled from London, designing and building websites for small businesses across the UK.",
+    text: "We're Raffaele and Brilliana. We run Upscaled from London, designing and building websites for businesses across the UK.",
     // A real photo of the two of you, e.g. { src: "/images/founders.jpg", alt: "Raffaele and Brilliana" }
     photo: { src: "", alt: "" },
   },

@@ -2,8 +2,40 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
-import {defineConfig} from 'vite';
+import {defineConfig, type Plugin} from 'vite';
 import {siteConfig} from './src/siteConfig';
+
+// Makes `npm run preview` behave like the host: a missing address gets 404.html
+// with a 404 status.
+const previewNotFound = (): Plugin => ({
+  name: 'preview-404-page',
+  configurePreviewServer(server) {
+    const dist = path.resolve(server.config.root, server.config.build.outDir);
+    server.middlewares.use((req, res, next) => {
+      let route = '/';
+      try {
+        route = decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname);
+      } catch {
+        route = '/404'; // an address that can't be decoded doesn't exist
+      }
+      const target = path.join(dist, route);
+      const isFile = (file: string) => fs.existsSync(file) && fs.statSync(file).isFile();
+      if (target.startsWith(dist)) {
+        if (isFile(target)) return next();
+        if (isFile(path.join(target, 'index.html'))) {
+          if (route.endsWith('/')) return next();
+          // /privacy redirects to /privacy/, as the host does.
+          res.statusCode = 308;
+          res.setHeader('Location', `${route.replace(/\/+/g, '/')}/`);
+          return res.end();
+        }
+      }
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.end(fs.readFileSync(path.join(dist, '404.html')));
+    });
+  },
+});
 
 export default defineConfig(() => {
   // Work card images that exist, so missing ones show a placeholder instead of a 404.
@@ -11,7 +43,10 @@ export default defineConfig(() => {
   const workImages = fs.existsSync(workDir) ? fs.readdirSync(workDir) : [];
 
   return {
-    plugins: [react(), tailwindcss()],
+    // Separate HTML pages, not a single-page app: unknown addresses return 404
+    // instead of falling back to index.html.
+    appType: 'mpa' as const,
+    plugins: [react(), tailwindcss(), previewNotFound()],
     define: {
       __WORK_IMAGES__: JSON.stringify(workImages),
       // Vercel sets VERCEL=1 during its builds. Analytics only loads there.
