@@ -1,27 +1,29 @@
 import React from "react";
 import { siteConfig } from "../siteConfig";
+import DotSection from "./DotSection";
+import Backdrop from "./Backdrop";
 import { Reveal, SectionHeading } from "./ui";
 
-/** 5. How it works: a four-step timeline, vertical on phones, horizontal on desktop. */
+/** How it works: four numbered steps. */
 export default function ProcessSection() {
   const { title, intro, steps } = siteConfig.process;
   return (
-    <section id="process" className="on-light bg-paper py-24 text-ink sm:py-32">
+    <DotSection id="process" tone="dark" className="py-24 sm:py-32">
+      <Backdrop />
       <div className="mx-auto max-w-[1400px] px-4 sm:px-8">
-        <SectionHeading tone="light" title={title} intro={intro} />
-        <Reveal>
-          <ol className="grid lg:grid-cols-4">
-            {steps.map((s) => (
-              <li key={s.title} className="relative border-l border-brass-deep/50 pb-10 pl-7 last:pb-0 lg:border-l-0 lg:border-t lg:pb-0 lg:pl-0 lg:pr-8 lg:pt-8">
-                <span className="absolute -left-[6px] top-1.5 h-[11px] w-[11px] rounded-full bg-brass-deep lg:-top-[6px] lg:left-0" aria-hidden="true" />
-                <p className="text-sm text-brass-deep">{s.timing}</p>
-                <h3 className="mt-1 text-2xl font-medium tracking-[-0.02em]">{s.title}</h3>
-                <p className="mt-2 max-w-sm text-base leading-relaxed text-stone">{s.description}</p>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
+        <SectionHeading title={title} intro={intro} />
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s, i) => (
+            <Reveal as="li" key={s.title} delay={i * 110}>
+              <div className="card-dark flex h-full flex-col p-7 sm:p-8">
+                <p className="text-sm font-semibold uppercase tracking-[0.12em] text-brass">Step {i + 1}</p>
+                <h3 className="mt-10 text-3xl font-medium tracking-[-0.03em] text-ivory">{s.title}</h3>
+                <p className="mt-3 text-base leading-relaxed text-muted">{s.description}</p>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
       </div>
-    </section>
+    </DotSection>
   );
 }

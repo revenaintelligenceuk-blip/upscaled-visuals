@@ -2,10 +2,19 @@
 import { renderToString } from "react-dom/server";
 import App from "./App";
 import LegalPage, { type LegalPageKey } from "./legal/LegalPage";
+import WorkPage from "./work/WorkPage";
 import { siteConfig } from "./siteConfig";
 
-export const render = (page: "home" | LegalPageKey) =>
-  renderToString(page === "home" ? <App /> : <LegalPage page={page} />);
+export const siteUrl = siteConfig.brand.url;
+
+export const render = (page: "home" | "work" | LegalPageKey) =>
+  renderToString(page === "home" ? <App /> : page === "work" ? <WorkPage /> : <LegalPage page={page} />);
+
+/** Google Search Console tag, once its code is set in siteConfig. */
+export const verificationTag = () => {
+  const code = siteConfig.brand.googleVerification.replace(/[^A-Za-z0-9_-]/g, "");
+  return code ? `<meta name="google-site-verification" content="${code}" />` : "";
+};
 
 export function structuredData(): string {
   const { brand, faq } = siteConfig;
@@ -19,9 +28,17 @@ export function structuredData(): string {
         url: `${brand.url}/`,
         description: brand.description,
         email: brand.email,
-        telephone: brand.phone,
+        telephone: brand.phone || undefined, // left out while empty
         image: `${brand.url}/og-image.png`,
-        areaServed: { "@type": "Country", name: "United Kingdom" },
+        areaServed: [
+          { "@type": "City", name: "London" },
+          { "@type": "Country", name: "United Kingdom" },
+        ],
+        founder: [
+          { "@type": "Person", name: "Raffaele" },
+          { "@type": "Person", name: "Brilliana" },
+        ],
+        knowsAbout: ["Web design", "Web development", "Search engine optimisation"],
         address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
         sameAs: [brand.instagramUrl],
       },

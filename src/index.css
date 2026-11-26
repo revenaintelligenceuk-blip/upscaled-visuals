@@ -17,7 +17,7 @@
   --color-paper: #f6f3ec;
   --color-paper-line: #ddd7c9;
   --color-muted: #a8a398;
-  --color-stone: #6b675f;
+  --color-stone: #55514a;
   --color-brass: #c9b48a;
   --color-brass-light: #ddcba5;
   --color-brass-deep: #6f5b30; /* AA contrast on paper */
@@ -71,7 +71,7 @@ body {
 /* Hidden only when scripts run, so pre-rendered content shows without them. */
 .js .reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(28px) scale(0.98);
   transition:
     opacity 0.7s var(--ease-out),
     transform 0.7s var(--ease-out);
@@ -166,7 +166,91 @@ body {
   }
 }
 
+/* ---------- Square grid, lined up with the dots behind it ---------- */
+.square-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background-size: 72px 72px;
+  background-position: left bottom;
+}
+.square-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(242 238 230 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(242 238 230 / 0.06) 1px, transparent 1px);
+}
+.square-grid-light {
+  background-image:
+    linear-gradient(to right, rgb(14 14 12 / 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(14 14 12 / 0.055) 1px, transparent 1px);
+}
+
+/* ---------- The one section background ---------- */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+}
+.backdrop-dark { background: radial-gradient(60rem 40rem at 12% 0%, rgb(212 150 90 / 0.14), transparent 70%); }
+.backdrop-light { background: radial-gradient(60rem 40rem at 88% 0%, rgb(201 180 138 / 0.24), transparent 70%); }
+
+/* ---------- Ticker ---------- */
+.ticker { background: linear-gradient(90deg, #ddcba5, #c9b48a 30%, #d9a56a 65%, #ddcba5); }
+.ticker-track { animation: ticker 70s linear infinite; }
+.ticker-window:hover .ticker-track { animation-play-state: paused; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+
+/* The pause button stops every looping animation. */
+.motion-paused :is(.ticker-track, .glow) { animation-play-state: paused; }
+
+/* ---------- One card style, light and dark ---------- */
+.card-light { border: 1px solid var(--color-paper-line); border-radius: 1rem; background: rgb(255 255 255 / 0.7); }
+.card-dark { border: 1px solid rgb(242 238 230 / 0.12); border-radius: 1rem; background: rgb(242 238 230 / 0.05); }
+
+details[open] > p { animation: rise 0.4s var(--ease-out) both; }
+/* FAQ answers open smoothly where the browser can animate to "auto" height */
+:root { interpolate-size: allow-keywords; }
+details::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size 0.4s var(--ease-out), content-visibility 0.4s allow-discrete;
+}
+details[open]::details-content { block-size: auto; }
+
+/* Press feedback: respond as soon as the finger or button goes down */
+button, a[href] { transition-property: color, background-color, border-color, scale, translate; transition-duration: 150ms; }
+button:active:not(:disabled), a[href].rounded-full:active { scale: 0.97; }
+
+/* Mobile menu grows from the button that opened it */
+#mobile-menu { transform-origin: top right; animation: menu-in 0.35s var(--ease-out) both; }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
+#mobile-menu a { animation: rise 0.45s var(--ease-out) both; }
+#mobile-menu a:nth-child(2) { animation-delay: 40ms; }
+#mobile-menu a:nth-child(3) { animation-delay: 80ms; }
+#mobile-menu a:nth-child(4) { animation-delay: 120ms; }
+#mobile-menu a:nth-child(5) { animation-delay: 160ms; }
+
+
+/* Translucent header becomes solid for people who ask for less transparency */
+@media (prefers-reduced-transparency: reduce) {
+  header { background-color: var(--color-ink) !important; backdrop-filter: none !important; }
+}
+
+.wordmark-colour {
+  background: linear-gradient(90deg, #f2eee6, #ddcba5, #c9b48a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .ticker-track, details[open] > p { animation: none; }
+  #mobile-menu, #mobile-menu a { animation: none; }
+  details::details-content { transition: none; }
+  .ticker-window { overflow-x: auto; }
+  .motion-toggle { display: none; }
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .word, .intro, .rise { opacity: 1; transform: none; animation: none; }

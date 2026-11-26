@@ -1,15 +1,18 @@
 import React from "react";
 import { Plus } from "lucide-react";
 import { siteConfig } from "../siteConfig";
+import DotSection from "./DotSection";
+import Backdrop from "./Backdrop";
 import { Reveal } from "./ui";
 
 export default function FaqSection() {
   return (
-    <section id="faq" className="bg-ink py-24 sm:py-32">
+    <DotSection id="faq" tone="dark" className="py-24 sm:py-32">
+      <Backdrop />
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 sm:px-8 lg:grid-cols-12">
         <Reveal className="lg:col-span-4">
           <h2 className="text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-ivory sm:text-6xl">
-            Common questions
+            Web design questions
           </h2>
           <p className="mt-5 text-muted">
             Something we haven't covered?{" "}
@@ -32,6 +35,6 @@ export default function FaqSection() {
           ))}
         </div>
       </div>
-    </section>
+    </DotSection>
   );
 }

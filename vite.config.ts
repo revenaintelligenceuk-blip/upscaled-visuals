@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import {defineConfig} from 'vite';
+import {siteConfig} from './src/siteConfig';
 
 export default defineConfig(() => {
   // Work card images that exist, so missing ones show a placeholder instead of a 404.
@@ -28,6 +29,7 @@ export default defineConfig(() => {
         // The homepage plus the three legal pages (served at /privacy/, /cookies/, /terms/).
         input: {
           main: path.resolve(import.meta.dirname, 'index.html'),
+          ...(siteConfig.showWork ? {work: path.resolve(import.meta.dirname, 'work/index.html')} : {}),
           privacy: path.resolve(import.meta.dirname, 'privacy/index.html'),
           cookies: path.resolve(import.meta.dirname, 'cookies/index.html'),
           terms: path.resolve(import.meta.dirname, 'terms/index.html'),

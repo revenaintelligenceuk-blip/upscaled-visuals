@@ -4,14 +4,20 @@ import { siteConfig } from "../siteConfig";
 const { legal, brand } = siteConfig;
 
 /**
- * The one line identifying who runs the site.
- * TODO: fill in siteConfig.legal.ownerNames and siteConfig.legal.address.
+ * The line identifying who runs the site. Empty details are left out.
+ * Before launch, fill in siteConfig.legal.ownerNames and siteConfig.legal.address:
+ * UK law requires a business to show who runs it and where it can be contacted.
  */
 export function businessIdentity(): string {
-  if (legal.structure === "ltd") {
-    return `${legal.tradingName} is a trading name of ${legal.companyName || "[COMPANY NAME] Ltd"}, a company registered in ${legal.placeOfRegistration} (company number ${legal.companyNumber || "[NUMBER]"}), registered office ${legal.registeredOffice || "[REGISTERED OFFICE]"}.`;
+  if (legal.structure === "ltd" && legal.companyName) {
+    const number = legal.companyNumber ? ` (company number ${legal.companyNumber})` : "";
+    const office = legal.registeredOffice ? `, registered office ${legal.registeredOffice}` : "";
+    return `${legal.tradingName} is a trading name of ${legal.companyName}, a company registered in ${legal.placeOfRegistration}${number}${office}.`;
   }
-  return `${legal.tradingName} is a trading name of ${legal.ownerNames}. Address for correspondence: ${legal.address}.`;
+  const who = legal.ownerNames
+    ? `${legal.tradingName} is a trading name of ${legal.ownerNames}.`
+    : `${legal.tradingName} is a web design studio based in London.`;
+  return legal.address ? `${who} Address for correspondence: ${legal.address}.` : who;
 }
 
 /** Small-print block for footers: identity, VAT and legal links. */

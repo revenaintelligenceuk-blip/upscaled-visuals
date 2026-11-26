@@ -1,6 +1,9 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { siteConfig } from "../siteConfig";
+import Backdrop from "../components/Backdrop";
+import DottedTrailCursor from "../components/ui/dotted-trail-cursor";
+import { dotShape, dotThemes } from "../components/DotSection";
 import { BusinessDetails, businessIdentity } from "./business";
 
 /*
@@ -25,7 +28,13 @@ export default function LegalPage({ page }: { page: LegalPageKey }) {
   }, [page]);
 
   return (
-    <div className="on-light min-h-screen bg-paper text-ink">
+    <div className="on-light relative isolate min-h-screen overflow-hidden bg-paper text-ink">
+      {/* Fixed to the screen, so long pages cost no more than short ones */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+        <DottedTrailCursor className="h-full!" {...dotThemes.light} {...dotShape}>
+          <div className="square-grid square-grid-light" />
+        </DottedTrailCursor>
+      </div>
       <header className="border-b border-paper-line">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-8">
           <a href="/" className="flex min-h-11 items-center text-xl font-semibold tracking-[-0.04em]">
@@ -57,12 +66,10 @@ const email = siteConfig.brand.email;
 const Mail = () => <a href={`mailto:${email}`}>{email}</a>;
 
 function Privacy() {
-  const { legal, brand } = siteConfig;
+  const { legal } = siteConfig;
   const processors = [
-    { who: legal.hostingProvider, why: "hosts this website. Like any web server, it briefly records technical data such as IP address and browser type to keep the site running and secure." },
-    { who: legal.emailProvider, why: "provides our email, where your enquiries and our conversations with you are stored." },
-    brand.formEndpoint && { who: brand.formProvider, why: "receives the enquiry form on this site and forwards it to us by email." },
-    brand.bookingUrl && { who: brand.bookingProvider, why: "lets you book a call with us, if you choose to use the booking link." },
+    { who: legal.hostingProvider || "Our website hosting provider", why: "hosts this website. Like any web server, it briefly records technical data such as IP address and browser type to keep the site running and secure." },
+    { who: legal.emailProvider || "Our email provider", why: "provides our email, where your enquiries and our conversations with you are stored." },
     { who: "Vercel Inc. (USA)", why: "provides Vercel Web Analytics, which gives us anonymous, aggregated visitor statistics without cookies." },
     { who: "Our accountant and HMRC", why: "if you become a client, for bookkeeping and tax purposes." },
   ].filter(Boolean) as { who: string; why: string }[];
@@ -82,12 +89,11 @@ function Privacy() {
 
       <h2>What we collect</h2>
       <ul>
-        <li><strong>When you send an enquiry:</strong> your name, email address, your website address (needed for a website audit), the type of help you want, a rough budget and your message.</li>
         <li><strong>When you email or call us:</strong> whatever you choose to tell us, and your contact details.</li>
         <li><strong>If you become a client:</strong> the details we need to deliver and invoice the project, such as billing name, address and payment records.</li>
         <li><strong>When you visit the site:</strong> our hosting provider's servers record basic technical data (IP address, browser, pages requested) in security logs. We use privacy-friendly analytics that don't set cookies, which show us which pages are visited, the referring site, and general details such as country, device and browser. We don't use advertising trackers. See our <a href="/cookies/">cookie policy</a>.</li>
       </ul>
-      <p>Please don't send us sensitive information (for example about health) through the form. We don't need it.</p>
+      <p>Please don't send us sensitive information (for example about health). We don't need it.</p>
 
       <h2>Why we use it, and our lawful basis</h2>
       <ul>
@@ -216,16 +222,24 @@ function Terms() {
       <h2>Information on this site</h2>
       <p>
         We work to keep the information here accurate and up to date, but it is general information about our services, not an offer
-        that can be accepted. This website doesn't list prices: we give each project a fixed written quote.{" "}
+        that can be accepted. This website doesn't list prices: we send a written quote for each project.{" "}
         {legal.vatNumber
           ? "VAT is added to quotes at the current rate."
           : "We are not currently VAT-registered, so no VAT is added to our quotes."}{" "}
         Every project is confirmed in a written quote and agreement, and that agreement, not this website, sets out what we'll
         deliver, the price and the payment terms.
       </p>
+      {siteConfig.showWork && (
+        <p>
+          The example projects marked "Concept" are designs we've created to show our approach. They are not sites for real
+          clients unless stated.
+        </p>
+      )}
+
+      <h2>Enquiries, audits and projects</h2>
       <p>
-        The example projects marked "Concept" are designs we've created to show our approach. They are not sites for real clients
-        unless stated.
+        Contacting us doesn't commit you to anything. Website audits, website projects and other services,
+        including AI services, are paid. We agree what's included and what it costs in writing before we start.
       </p>
 
       <h2>Our content</h2>
@@ -236,8 +250,7 @@ function Terms() {
 
       <h2>Using the site</h2>
       <p>
-        Please don't misuse the site, for example by trying to gain unauthorised access, introducing viruses, or using the contact
-        form to send spam. We may suspend access to the site at any time, for example for maintenance.
+        Please don't misuse the site, for example by trying to gain unauthorised access or introducing viruses. We may suspend access to the site at any time, for example for maintenance.
       </p>
 
       <h2>Links to other websites</h2>

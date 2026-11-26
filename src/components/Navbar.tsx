@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { siteConfig } from "../siteConfig";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
-import { scrollToId } from "./ui";
+import ContactButton from "./ContactButton";
 
 export default function Navbar() {
-  const { navigation, cta, brand } = siteConfig;
+  const { navigation, brand } = siteConfig;
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -64,12 +63,12 @@ export default function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 ${
-        open ? "border-line bg-ink" : scrolled ? "border-line bg-ink/95 backdrop-blur-xl" : "border-transparent"
+        open ? "border-line bg-ink" : scrolled ? "border-line bg-ink/92 backdrop-blur-xl" : "border-transparent"
       }`}
     >
       <div ref={progressRef} aria-hidden="true" style={{ transform: "scaleX(0)" }} className="absolute inset-x-0 bottom-[-1px] h-px origin-left bg-brass" />
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-3 px-4 sm:h-20 sm:px-8">
-        <a href="#top" className="flex min-h-11 items-center text-xl font-semibold tracking-[-0.04em] text-ivory">
+        <a href="/#top" className="flex min-h-11 items-center text-xl font-semibold tracking-[-0.04em] text-ivory">
           {brand.name}
         </a>
 
@@ -86,10 +85,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LiquidButton size="xl" className="rounded-full px-4 text-[13px] has-[>svg]:px-4 sm:px-6" onClick={() => scrollToId("contact")}>
-            <span className="min-[420px]:hidden">{cta.shortLabel}</span>
-            <span className="max-[419px]:hidden">{cta.label}</span>
-          </LiquidButton>
+          <ContactButton small />
           <button
             ref={toggleRef}
             type="button"
@@ -119,9 +115,6 @@ export default function Navbar() {
                 {item.label}
               </a>
             ))}
-            <a href="#contact" onClick={close} className="mt-8 flex min-h-12 items-center justify-center rounded-full bg-ivory text-sm font-medium text-ink">
-              {cta.label}
-            </a>
           </nav>
         </div>
       )}
